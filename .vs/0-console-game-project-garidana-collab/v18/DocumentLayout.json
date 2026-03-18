@@ -3,10 +3,6 @@
   "WorkspaceRootPath": "C:\\Users\\garid\\OneDrive\\\uBB38\uC11C\\GitHub\\0-console-game-project-garidana-collab\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3D779006-C7C6-92B7-961A-E9F48D12DB73}|0-console-game-project-garidana-collab.csproj|c:\\users\\garid\\onedrive\\\uBB38\uC11C\\github\\0-console-game-project-garidana-collab\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{3D779006-C7C6-92B7-961A-E9F48D12DB73}|0-console-game-project-garidana-collab.csproj|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{3D779006-C7C6-92B7-961A-E9F48D12DB73}|0-console-game-project-garidana-collab.csproj|c:\\users\\garid\\onedrive\\\uBB38\uC11C\\github\\0-console-game-project-garidana-collab\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3D779006-C7C6-92B7-961A-E9F48D12DB73}|0-console-game-project-garidana-collab.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -23,19 +19,6 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": ".gitignore",
-              "DocumentMoniker": "C:\\Users\\garid\\OneDrive\\\uBB38\uC11C\\GitHub\\0-console-game-project-garidana-collab\\.gitignore",
-              "RelativeDocumentMoniker": ".gitignore",
-              "ToolTip": "C:\\Users\\garid\\OneDrive\\\uBB38\uC11C\\GitHub\\0-console-game-project-garidana-collab\\.gitignore",
-              "RelativeToolTip": ".gitignore",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2026-03-18T07:30:55.682Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\garid\\OneDrive\\\uBB38\uC11C\\GitHub\\0-console-game-project-garidana-collab\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
