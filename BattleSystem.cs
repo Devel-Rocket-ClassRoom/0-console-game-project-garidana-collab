@@ -19,7 +19,7 @@ public class BattleSystem
     // 전투 실행
     public bool RunBattle(Player player, Monster monster)
     {
-        Console.WriteLine($"\n===== {monster.Name}과의 전투 시작! =====\n");
+        Console.WriteLine($"\n===== {monster.Name} 출현! =====\n");
 
         while (player.IsAlive && monster.IsAlive)
         {
