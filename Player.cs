@@ -6,8 +6,7 @@ using static System.Console;
 
 public abstract class Player : Character
 {
-    public double MaxMp { get; set; }
-    public double Mp { get; set; }
+    
     public List<Skill> skills = new();
 
     public void PrintSkills()

@@ -11,4 +11,5 @@ public class StatusEffect
     public double Value; // 효과 수치
     public Action<Character, BattleSystem> OnTurnStart; // 턴 시작시 효과
     public Func<double, double> OnTakeDamage; // 피해받을 시 효과
+    public Action<Character, BattleSystem> OnExpire; // 지속효과
 }

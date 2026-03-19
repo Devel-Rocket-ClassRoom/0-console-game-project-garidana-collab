@@ -29,7 +29,7 @@ class Mage : Player
         skills.Add(new Skill
         {
             Name = "마나 실드",
-            Description = "마나를 몸에 둘러 어떤 공격이던 막아냅니다",
+            Description = "마나로 몸을 감싸 어떠한 공격도 막아냅니다",
             ManaCost = 30,
             CoolDown = 4,
             Effect = (player,monster, bs) =>
@@ -50,7 +50,7 @@ class Mage : Player
             Name = "마나 작렬",
             Description = "마나를 끌어모아 강력한 데미지를 입힙니다",
             ManaCost = 0,
-            CoolDown = 4,
+            CoolDown = 6,
             Effect = (player, monster, bs) =>
             {
                 double cost = player.Mp * 0.5;
@@ -61,8 +61,8 @@ class Mage : Player
         skills.Add(new Skill
         {
             Name = "저주 : 대혼란",
-            Description = "상대방의 정신을 교란해 사리분별도 못하게 합니다",
-            ManaCost = 20,
+            Description = "상대방의 정신을 헤집어 사리분별을 못하게 합니다",
+            ManaCost = 60,
             CoolDown = 6,
             Effect = (player,monster,bs) =>
             {
@@ -70,7 +70,11 @@ class Mage : Player
                 {
                     Name = "대혼란",
                     Duration = 2,
-                    OnTurnStart = (character, bs) => bs.MonsterDealDamage(monster, monster, 1)
+                    OnTurnStart = (character, bs) =>
+                    {
+                        character.IsIncap = true;
+                        bs.MonsterDealDamage(monster, monster, 1);
+                    }
                 });
                
             }

@@ -13,7 +13,7 @@ VolcanoMole vc = new();
 //FireSpirit fs = new();
 //MagmaTorToise mt = new();
 //EarthWorm ew = new();
-BS.RunBattle(m, vc);
+BS.RunBattle(r, vc);
 //BS.RunBattle(w,ss);
 //BS.RunBattle(w,fs);
 //BS.RunBattle(w,mt);

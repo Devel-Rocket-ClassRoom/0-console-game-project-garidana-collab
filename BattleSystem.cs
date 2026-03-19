@@ -53,14 +53,14 @@ public class BattleSystem
                 continue;
             }
             // 입력받은 스킬 사용
-            Skill selected = player.skills[idx];
+            Skill selectedSkill = player.skills[idx];
             // 사용할 스킬 정보 출력
-            WriteLine($"[{selected.Name}] 사용 ({selected.Description})");
+            WriteLine($"[{selectedSkill.Name}] 사용 ({selectedSkill.Description})");
             WriteLine();
-            selected.Effect(player, monster, this);
+            selectedSkill.Effect(player, monster, this);
             // 마나 차감과 쿨타임 갱신
-            player.Mp -= selected.ManaCost;
-            selected.CurrentCD = selected.CoolDown;
+            player.Mp -= selectedSkill.ManaCost;
+            selectedSkill.CurrentCD = selectedSkill.CoolDown;
             //Thread.Sleep(2000);
 
             if (!monster.IsAlive) break;
@@ -69,6 +69,7 @@ public class BattleSystem
             
             if (monster.IsAlive)
             {
+                monster.IsIncap = false;
                 foreach (StatusEffect effect in monster.statusEffects)
                 {
                     if (effect.OnTurnStart != null)
@@ -76,12 +77,21 @@ public class BattleSystem
                         effect.OnTurnStart(monster, this);
                     }
                 }
-                monster.ExecuteSkill(player, this);
+                if (monster.IsIncap)
+                {
+                    WriteLine($"{monster.Name}은(는) 전투불능 상태이다. ");
+                    
+                }
+                else
+                {
+                    monster.ExecuteSkill(player, this);
+                }
             }
 
             // 한 라운드 끝
-            // 한 라운드가 끝나고 처리해야할 사항
             Round++; // 라운드 증가
+
+            // 한 라운드가 끝나고 처리해야할 사항
             // 스킬 남은 쿨다운 감소
             foreach (var skill in player.skills)
             {
@@ -99,7 +109,15 @@ public class BattleSystem
                 }
                 
             }
-            // 지속시간이 다 되면 지속효과 삭제
+            // 플레이어 만료된 지속효과 (효과를 받은 스택의 원상복귀) OnExpire 델리게이트 호출
+            foreach (var se in player.statusEffects)
+            {
+                if (se.Duration <= 0 && se.OnExpire != null)
+                {
+                    se.OnExpire(player,this);
+                }
+            }
+            // 플레이어 지속시간이 다 되면 지속효과 삭제
             player.statusEffects.RemoveAll(se => se.Duration <= 0);
 
             // 몬스터 지속효과 지속시간 감소 및 효과 삭제
@@ -111,7 +129,17 @@ public class BattleSystem
                 }
 
             }
+            // 몬스터 만료된 지속효과 OnExpire 호출
+            foreach (var se in monster.statusEffects)
+            {
+                if (se.Duration <= 0 && se.OnExpire != null)
+                {
+                    se.OnExpire(player, this);
+                }
+            }
             monster.statusEffects.RemoveAll(se => se.Duration <= 0);
+
+
             // 마나 회복
             // Math.Min(int a, int b) 는 둘중 더 작은 값을 반환
             player.Mp = Math.Min(player.Mp + 5, player.MaxMp); // 현재 마나는 최대마나를 넘길 수 없음
@@ -136,6 +164,9 @@ public class BattleSystem
         }
 
     }
+
+
+
 
 
 
@@ -194,8 +225,6 @@ public class BattleSystem
                 if (effect.OnTakeDamage != null)
                 {
                     damage = effect.OnTakeDamage(damage);
-                   
-
                 }
             }
             // 지속효과의 지속시간이 다되면 지속효과 제거
