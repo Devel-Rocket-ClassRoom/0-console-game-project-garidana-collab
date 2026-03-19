@@ -46,7 +46,7 @@ class Warrior : Player
                 {
                     Name = "방어태세",
                     Duration = 1,
-                    Value = 0.5,
+                    // Value = 0.5, 
                     OnTakeDamage = (damage) =>
                     {
                         return damage *= 0.5;

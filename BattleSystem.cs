@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using static System.Console;
-using static System.Net.Mime.MediaTypeNames;
 
 // BattleSystem.cs
 
@@ -68,12 +66,21 @@ public class BattleSystem
             if (!monster.IsAlive) break;
 
             // 몬스터 턴
+            
             if (monster.IsAlive)
             {
+                foreach (StatusEffect effect in monster.statusEffects)
+                {
+                    if (effect.OnTurnStart != null)
+                    {
+                        effect.OnTurnStart(monster, this);
+                    }
+                }
                 monster.ExecuteSkill(player, this);
             }
 
             // 한 라운드 끝
+            // 한 라운드가 끝나고 처리해야할 사항
             Round++; // 라운드 증가
             // 스킬 남은 쿨다운 감소
             foreach (var skill in player.skills)
@@ -83,6 +90,28 @@ public class BattleSystem
                     skill.CurrentCD--;
                 }
             }
+            // 플레이어 지속효과 지속시간 감소 
+            foreach (var se in player.statusEffects)
+            {
+                if (se.Duration > 0)
+                {
+                    se.Duration--;
+                }
+                
+            }
+            // 지속시간이 다 되면 지속효과 삭제
+            player.statusEffects.RemoveAll(se => se.Duration <= 0);
+
+            // 몬스터 지속효과 지속시간 감소 및 효과 삭제
+            foreach (var se in monster.statusEffects)
+            {
+                if (se.Duration > 0)
+                {
+                    se.Duration--;
+                }
+
+            }
+            monster.statusEffects.RemoveAll(se => se.Duration <= 0);
             // 마나 회복
             // Math.Min(int a, int b) 는 둘중 더 작은 값을 반환
             player.Mp = Math.Min(player.Mp + 5, player.MaxMp); // 현재 마나는 최대마나를 넘길 수 없음
@@ -165,14 +194,14 @@ public class BattleSystem
                 if (effect.OnTakeDamage != null)
                 {
                     damage = effect.OnTakeDamage(damage);
-                    // 이펙트 지속시간 -1
-                    effect.Duration--;
+                   
 
                 }
             }
             // 지속효과의 지속시간이 다되면 지속효과 제거
             p.statusEffects.RemoveAll(e => e.Duration <= 0);
         }
+
         defender.Hp -= damage;
         WriteLine(defender.IsEvade ? $"[{defender.Name}]이(가) 공격을 회피했다! 아무런 피해가 없었다.." : $"[{defender.Name}]이(가) {damage} 피해를 입었다.");
         defender.IsEvade = false;

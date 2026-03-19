@@ -9,6 +9,6 @@ public class StatusEffect
     public string Name;
     public int Duration; // 지속효과 남은 지속 턴
     public double Value; // 효과 수치
-    public Action<Character> OnTurnStart; // 턴 시작시 효과
+    public Action<Character, BattleSystem> OnTurnStart; // 턴 시작시 효과
     public Func<double, double> OnTakeDamage; // 피해받을 시 효과
 }
