@@ -31,11 +31,11 @@ class VolcanoMole : Monster
     {
         if (!IsBurrow)
         {
-
-            if (rand.NextDouble() <= 0.05)
+            
+            if (rand.NextDouble() <= 0.20)  // 땅굴 잠행 발동 확률
             {
                 IsBurrow = true;
-                Console.WriteLine($"{Name}이(가) {mskills[0].Name}을 시전했습니다.\n{mskills[0].Description}");
+                Console.WriteLine($"{Name}이(가) \"{mskills[0].Name}\"을 시전했습니다.\n{mskills[0].Description}");
             }
             else
             {

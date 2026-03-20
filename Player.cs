@@ -11,8 +11,9 @@ public abstract class Player : Character
 
     public void PrintSkills()
     {
-        WriteLine("-------------------------------");
-
+        WriteLine("-------------------------------------");
+        WriteLine("스킬을 선택하세요.");
+        WriteLine();
         for (int i = 0; i < skills.Count; i++)
         {
             Write($"{i}. {skills[i].Name} ({skills[i].ManaCost})");
@@ -26,9 +27,9 @@ public abstract class Player : Character
             }
             WriteLine();
         }
-        WriteLine("-------------------------------");
+        WriteLine("-------------------------------------");
 
-        Write("스킬을 선택하세요.");
+        
     }
 
     public void PrintStatusEffects()
@@ -39,7 +40,6 @@ public abstract class Player : Character
      
             WriteLine($"- [{se.Name}] {se.Duration}턴 남음 ");
         }
-        WriteLine();
         //for (int i = 0; i < statusEffects.Count; i++)
         //{
         //    WriteLine($"[{statusEffects[i].Name} - {statusEffects[i].Duration} 남음]");

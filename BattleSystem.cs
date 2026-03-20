@@ -12,28 +12,34 @@ using static System.Console;
 public class BattleSystem
 {
     private Random _random = new Random();
-    public int Round = 1;
+    public int Round = 0;
     public bool IsCrit;
     public bool IsEvade;
     // 전투 실행
     public bool RunBattle(Player player, Monster monster)
     {
-        Console.WriteLine($"\n====== {monster.Name} 출현! ======\n");
+        Console.WriteLine($"\n>>>>> {monster.Name} 출현! <<<<<\n");
+        // 불의 저령이후 몬스터들의 전용 출현 메시지
         if (monster.HeatDamage > 0)
         {
-            WriteLine("-------------------------------");
+            WriteLine("-------------------------------------");
             WriteLine("엄청난 열기가 느껴집니다. 중심부에 가까워지는 느낌입니다.");
-            WriteLine($"매 턴 마다 {monster.HeatDamage}의 열기 피해를 입습니다.");
+            WriteLine($"라운드 마다 {monster.HeatDamage}의 열기 피해를 입습니다.");
         }
 
         while (player.IsAlive && monster.IsAlive)
         {
            
 
-            WriteLine("-------------------------------");
-
-            WriteLine($"<{Round}번째 라운드>");
-            WriteLine();
+            WriteLine("-------------------------------------");
+            if (Round == 0)
+            {
+                WriteLine("<전투 시작>\n");
+            }
+            else
+            {
+                WriteLine($"<{Round} 라운드>\n");
+            }
             // 플레이어 턴
 
             Console.WriteLine($"[{player.Name}] HP: {player.Hp}/{player.MaxHp} MP: {player.Mp}/{player.MaxMp}");
@@ -64,12 +70,17 @@ public class BattleSystem
 
 
             player.PrintStatusEffects();
+            // 플레이어 잔여 지속효과 체크 후 적용
             foreach (StatusEffect effect in player.statusEffects)
             {
                 if (effect.OnTurnStart != null)
                 {
                     effect.OnTurnStart(player, this);
                 }
+            }
+            if (player.IsIncap)
+            {
+
             }
             // 스킬 선택
             player.PrintSkills(); // 플레이어 스킬 목록 출력
@@ -142,7 +153,7 @@ public class BattleSystem
                 // 전투 불능 검사
                 if (monster.IsIncap)
                 {
-                    WriteLine($"{monster.Name}은(는) 전투불능 상태이다. ");
+                    WriteLine($"{monster.Name}은(는) 전투불능 상태이다.");
                     
                 }
                 // 공격 게시
@@ -155,7 +166,15 @@ public class BattleSystem
             // 맵의 열기 데미지
             if (monster.HeatDamage > 0)
             {
-                player.Hp -= monster.HeatDamage;
+                int IncreasedHeat = monster.HeatDamage * 2;
+                if (player.statusEffects.Any(se => se.Name == "화상"))
+                {
+                    player.Hp -= IncreasedHeat;
+                }
+                else
+                {
+                    player.Hp -= monster.HeatDamage;
+                }
             }
             // 한 라운드 끝
             Round++; // 라운드 증가
@@ -169,12 +188,7 @@ public class BattleSystem
                     skill.CurrentCD--;
                 }
             }
-            
            
-
-          
-            
-
 
             // 마나 회복
             // Math.Min(int a, int b) 는 둘중 더 작은 값을 반환
@@ -186,8 +200,6 @@ public class BattleSystem
 
         if (player.IsAlive)
         {
-            Write(">> ");
-
             Console.WriteLine($"{monster.Name}을(를) 성공적으로 처치했다....");
             Round = 0;
             return true;
@@ -198,9 +210,9 @@ public class BattleSystem
             Console.WriteLine($"GAME OVER...");
             return false;
         }
-
+       
     }
-
+     
 
 
 
@@ -228,6 +240,7 @@ public class BattleSystem
         TakeDamage(defender, damage);
         attacker.IsCrit = false;
     }
+
     // 몬스터가 데미지 주는 메서드 (치명타 데미지 배율이 다름
     public void MonsterDealDamage(Character attacker, Character defender, double multiplier)  // 스킬내부에서 DealDamage계산
     {
@@ -244,6 +257,7 @@ public class BattleSystem
         TakeDamage(defender, damage);
         attacker.IsCrit = false;
     }
+
     // 피격자 데미지 받는 메서드 // 후에 스킬 내부에서 데미지 처리
     public void TakeDamage(Character defender, double damage)
     {

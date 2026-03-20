@@ -9,7 +9,7 @@ class SulfuricSlime : Monster
     public SulfuricSlime()
     {
         Name = "유황 슬라임";
-        MaxHp = 170;
+        MaxHp = 150;
         Hp = MaxHp;
         Attack = 15;
         CritChance = 0.05;
@@ -29,7 +29,7 @@ class SulfuricSlime : Monster
         
         if (random.NextDouble() <= 0.3)
         {
-            Console.WriteLine($"{Name}이(가) {mskills[0].Name}을 시전했습니다.\n{mskills[0].Description}");
+            Console.WriteLine($"{Name}이(가) \"{mskills[0].Name}\"을 시전했습니다.\n{mskills[0].Description}");
             if (!target.statusEffects.Any(se => se.Name == "가스 중독"))
             {
                 target.statusEffects.Add(new StatusEffect
