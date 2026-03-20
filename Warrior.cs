@@ -73,7 +73,7 @@ class Warrior : Player
             Name = "분노 강타",
             Description = "받은 만큼 더 세게 돌려줍니다....",
             ManaCost = 50,
-            CoolDown = 5,
+            CoolDown = 6,
             Effect = (player, monster, bs) =>
             {
                 bs.PlayerDealDamage(player, monster, 2, ((player.MaxHp - player.Hp) * 0.5));

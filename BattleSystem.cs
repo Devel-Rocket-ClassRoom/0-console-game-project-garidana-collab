@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 using System.Threading;
+using System.Linq;
 using static System.Console;
 
 // BattleSystem.cs
@@ -17,11 +18,12 @@ public class BattleSystem
     // 전투 실행
     public bool RunBattle(Player player, Monster monster)
     {
-        Console.WriteLine($"\n===== {monster.Name} 출현! =====\n");
+        Console.WriteLine($"\n====== {monster.Name} 출현! ======\n");
 
         while (player.IsAlive && monster.IsAlive)
         {
-            WriteLine("------------------");
+            WriteLine("-------------------------------");
+
             WriteLine($"<{Round}번째 라운드>");
             WriteLine();
             // 플레이어 턴
@@ -30,6 +32,37 @@ public class BattleSystem
 
             Console.WriteLine($"[{monster.Name}] HP: {monster.Hp}/{monster.MaxHp}");
             WriteLine();
+
+            // 플레이어 지속효과 지속시간 감소 
+            foreach (var se in player.statusEffects)
+            {
+                if (se.Duration > 0)
+                {
+                    se.Duration--;
+                }
+
+            }
+            var pExpired = player.statusEffects.Where(se => se.Duration <= 0).ToList();
+            // 플레이어 만료된 지속효과 (효과를 받은 스택의 원상복귀) OnExpire 델리게이트 호출
+            foreach (var se in pExpired)
+            {
+                if (se.Duration <= 0 && se.OnExpire != null)
+                {
+                    se.OnExpire(player, this);
+                }
+            }
+            // 플레이어 지속시간이 다 되면 지속효과 삭제
+            player.statusEffects.RemoveAll(se => se.Duration <= 0);
+
+
+            player.PrintStatusEffects();
+            foreach (StatusEffect effect in player.statusEffects)
+            {
+                if (effect.OnTurnStart != null)
+                {
+                    effect.OnTurnStart(player, this);
+                }
+            }
             // 스킬 선택
             player.PrintSkills(); // 플레이어 스킬 목록 출력
             WriteLine();
@@ -58,6 +91,7 @@ public class BattleSystem
             WriteLine($"[{selectedSkill.Name}] 사용 ({selectedSkill.Description})");
             WriteLine();
             selectedSkill.Effect(player, monster, this);
+         
             // 마나 차감과 쿨타임 갱신
             player.Mp -= selectedSkill.ManaCost;
             selectedSkill.CurrentCD = selectedSkill.CoolDown;
@@ -66,7 +100,26 @@ public class BattleSystem
             if (!monster.IsAlive) break;
 
             // 몬스터 턴
-            
+            // 몬스터 지속효과 지속시간 감소 및 효과 삭제
+            foreach (var se in monster.statusEffects)
+            {
+                if (se.Duration > 0)
+                {
+                    se.Duration--;
+                }
+
+            }
+            // 몬스터 만료된 지속효과 OnExpire 호출
+            var mExpired = monster.statusEffects.Where(se => se.Duration <= 0).ToList();
+            foreach (var se in mExpired)
+            {
+                if (se.Duration <= 0 && se.OnExpire != null)
+                {
+                    se.OnExpire(monster, this);
+                }
+            }
+            monster.statusEffects.RemoveAll(se => se.Duration <= 0);
+
             if (monster.IsAlive)
             {
                 monster.IsIncap = false;
@@ -100,44 +153,11 @@ public class BattleSystem
                     skill.CurrentCD--;
                 }
             }
-            // 플레이어 지속효과 지속시간 감소 
-            foreach (var se in player.statusEffects)
-            {
-                if (se.Duration > 0)
-                {
-                    se.Duration--;
-                }
-                
-            }
-            // 플레이어 만료된 지속효과 (효과를 받은 스택의 원상복귀) OnExpire 델리게이트 호출
-            foreach (var se in player.statusEffects)
-            {
-                if (se.Duration <= 0 && se.OnExpire != null)
-                {
-                    se.OnExpire(player,this);
-                }
-            }
-            // 플레이어 지속시간이 다 되면 지속효과 삭제
-            player.statusEffects.RemoveAll(se => se.Duration <= 0);
+            
+           
 
-            // 몬스터 지속효과 지속시간 감소 및 효과 삭제
-            foreach (var se in monster.statusEffects)
-            {
-                if (se.Duration > 0)
-                {
-                    se.Duration--;
-                }
-
-            }
-            // 몬스터 만료된 지속효과 OnExpire 호출
-            foreach (var se in monster.statusEffects)
-            {
-                if (se.Duration <= 0 && se.OnExpire != null)
-                {
-                    se.OnExpire(player, this);
-                }
-            }
-            monster.statusEffects.RemoveAll(se => se.Duration <= 0);
+          
+            
 
 
             // 마나 회복
@@ -159,7 +179,7 @@ public class BattleSystem
         else
         {
             Console.WriteLine($"{monster.Name} 에게 플레이어가 살해당했다...");
-            Console.WriteLine($"{player.Name} 사망...");
+            Console.WriteLine($"GAME OVER...");
             return false;
         }
 

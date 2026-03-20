@@ -32,7 +32,7 @@ class Ranger : Player
             CoolDown = 4,
             Effect = (player,monster, bs) =>
             {
-                player.EvadeChance += 0.2; // 회피 증가
+                player.EvadeChance += 0.8; // 회피 증가
                 player.statusEffects.Add(new StatusEffect
                 {
                     Name = "암살자의 발재간",
@@ -40,7 +40,7 @@ class Ranger : Player
                     OnExpire = (character, bs) =>
                     {
                         // 지속효과 만료시 회피 확률 원복
-                        character.EvadeChance -= 0.2; 
+                        character.EvadeChance -= 0.8; 
                     }
                 });
             }
@@ -53,6 +53,7 @@ class Ranger : Player
             CoolDown = 3,
             Effect = (player,monster,bs) =>
             {
+                bs.PlayerDealDamage(player, monster, 1);
                 monster.statusEffects.Add(new StatusEffect
                 {
                     Name = "내장 파열",
@@ -75,7 +76,7 @@ class Ranger : Player
             CoolDown = 4,
             Effect = (player,monster,bs) =>
             {
-                double orgCritChance = player.CritChance;
+               
 
                 player.statusEffects.Add(new StatusEffect
                 {
@@ -84,21 +85,22 @@ class Ranger : Player
                     OnTakeDamage = (damage) =>
                     {
                         return damage *= 0;
-                        
-                    }
+
+                    },
                     OnExpire = (character, bs) =>
                     {
                         double originalCritChance = character.CritChance;
-                        character.CritChance = 1;
+                        character.CritChance = 1.0;
                         character.statusEffects.Add(new StatusEffect
                         {
+                            Name = "은신:약점 공격",
                             Duration = 1,
                             OnExpire = (character1, bs) =>
                             {
-                                character2.CritChance = originalCritChance;
+                                character1.CritChance = originalCritChance;
                             }
                         });
-                    };
+                    }
 
                 });
                 

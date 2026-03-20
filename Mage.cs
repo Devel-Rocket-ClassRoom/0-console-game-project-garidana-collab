@@ -23,7 +23,7 @@ class Mage : Player
             Name = "비전구",
             Description = "마법사의 기본 공격입니다",
             ManaCost = 10,
-            CoolDown = 0,
+            CoolDown = 1,
             Effect = (player, monster, bs) => bs.PlayerDealDamage(player, monster, 1)
         });
         skills.Add(new Skill
@@ -76,6 +76,19 @@ class Mage : Player
                         bs.MonsterDealDamage(monster, monster, 1);
                     }
                 });
+               
+            }
+
+        });
+        skills.Add(new Skill
+        {
+            Name = "명상",
+            Description = "가만히 명상을하며 마나를 회복 합니다... -_-",
+            ManaCost = 0,
+            CoolDown = 0,
+            Effect = (player, monster, bs) =>
+            {
+                player.Mp += 5;
                
             }
         });

@@ -23,7 +23,7 @@ class VolcanoMole : Monster
             Name = "땅굴 잠행",
             Description = "화산 두더지가 굴을 파고 들어갑니다...",
             // Value = 0;
-            Effect = (player, monster, bs) => bs.MonsterDealDamage(monster, player, 2.5)
+            //Effect = (player, monster, bs) => bs.MonsterDealDamage(monster, player, 2.5)
         });
     }
 
@@ -32,7 +32,7 @@ class VolcanoMole : Monster
         if (!IsBurrow)
         {
 
-            if (rand.Next(1, 101) <= 50)
+            if (rand.NextDouble() <= 0.05)
             {
                 IsBurrow = true;
                 Console.WriteLine($"{Name}이(가) {mskills[0].Name}을 시전했습니다.\n{mskills[0].Description}");
