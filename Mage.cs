@@ -14,7 +14,7 @@ class Mage : Player
         Hp = MaxHp;
         MaxMp = 120;
         Mp = MaxMp;
-        Attack = 20;
+        Attack = 18;
         CritChance = 0.05;
         EvadeChance = 0.1;
 
@@ -22,7 +22,7 @@ class Mage : Player
         {
             Name = "비전구",
             Description = "마법사의 기본 공격입니다",
-            ManaCost = 10,
+            ManaCost = 15,
             CoolDown = 1,
             Effect = (player, monster, bs) => bs.PlayerDealDamage(player, monster, 1)
         });
@@ -31,7 +31,7 @@ class Mage : Player
             Name = "마나 실드",
             Description = "마나로 몸을 감싸 어떠한 공격도 막아냅니다",
             ManaCost = 30,
-            CoolDown = 4,
+            CoolDown = 5,
             Effect = (player,monster, bs) =>
             {
                 player.statusEffects.Add(new StatusEffect

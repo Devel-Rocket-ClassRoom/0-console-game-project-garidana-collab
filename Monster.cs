@@ -8,6 +8,8 @@ public abstract class Monster : Character
 {
     protected List<Skill> mskills = new List<Skill>();
 
+    public int HeatDamage = 0;
+
     protected ConsoleColor MColor;
 
     public abstract void ExecuteSkill(Character target, BattleSystem bs);

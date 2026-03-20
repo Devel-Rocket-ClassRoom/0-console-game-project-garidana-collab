@@ -19,9 +19,20 @@ public class BattleSystem
     public bool RunBattle(Player player, Monster monster)
     {
         Console.WriteLine($"\n====== {monster.Name} 출현! ======\n");
+        if (monster.HeatDamage > 0)
+        {
+            WriteLine("-------------------------------");
+            WriteLine("엄청난 열기가 느껴집니다. 중심부에 가까워지는 느낌입니다.");
+            WriteLine($"매 턴 마다 {monster.HeatDamage}의 열기 피해를 입습니다.");
+        }
 
         while (player.IsAlive && monster.IsAlive)
         {
+            if (monster.HeatDamage > 0)
+            {
+                player.Hp -= monster.HeatDamage;
+            }
+
             WriteLine("-------------------------------");
 
             WriteLine($"<{Round}번째 라운드>");
@@ -123,6 +134,7 @@ public class BattleSystem
             if (monster.IsAlive)
             {
                 monster.IsIncap = false;
+                // 턴 시작시 적용할 지속효과가 있으면 적용
                 foreach (StatusEffect effect in monster.statusEffects)
                 {
                     if (effect.OnTurnStart != null)
@@ -130,11 +142,13 @@ public class BattleSystem
                         effect.OnTurnStart(monster, this);
                     }
                 }
+                // 전투 불능 검사
                 if (monster.IsIncap)
                 {
                     WriteLine($"{monster.Name}은(는) 전투불능 상태이다. ");
                     
                 }
+                // 공격 게시
                 else
                 {
                     monster.ExecuteSkill(player, this);

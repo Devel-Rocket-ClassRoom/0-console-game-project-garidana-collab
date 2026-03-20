@@ -59,7 +59,7 @@ class Warrior : Player
             // 스킬 2
             Name = "전투 함성",
             Description = "최대 체력을 20 증가 시키고, 20의 체력을 회복합니다",
-            ManaCost = 40,
+            ManaCost = 30,
             CoolDown = 4,
             Effect = (player, monster, bs) =>
             {
@@ -72,7 +72,7 @@ class Warrior : Player
             // 스킬 3
             Name = "분노 강타",
             Description = "받은 만큼 더 세게 돌려줍니다....",
-            ManaCost = 50,
+            ManaCost = 40,
             CoolDown = 6,
             Effect = (player, monster, bs) =>
             {
