@@ -2,7 +2,7 @@
 using System;
 using static System.Console;
 
-WriteLine("=== 김경일의 모험 ver 0.0.3 ===");
+WriteLine("=== 김경일의 모험 ver 0.0.4 ===");
 WriteLine("화산 동굴에 입장하였습니다.");
 BattleSystem BS = new();
 Warrior w = new("김경일");

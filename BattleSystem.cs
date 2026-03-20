@@ -28,10 +28,7 @@ public class BattleSystem
 
         while (player.IsAlive && monster.IsAlive)
         {
-            if (monster.HeatDamage > 0)
-            {
-                player.Hp -= monster.HeatDamage;
-            }
+           
 
             WriteLine("-------------------------------");
 
@@ -155,6 +152,11 @@ public class BattleSystem
                 }
             }
 
+            // 맵의 열기 데미지
+            if (monster.HeatDamage > 0)
+            {
+                player.Hp -= monster.HeatDamage;
+            }
             // 한 라운드 끝
             Round++; // 라운드 증가
 
