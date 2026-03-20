@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 class SulfuricSlime : Monster
 {
@@ -8,9 +9,9 @@ class SulfuricSlime : Monster
     public SulfuricSlime()
     {
         Name = "유황 슬라임";
-        MaxHp = 190;
+        MaxHp = 150;
         Hp = MaxHp;
-        Attack = 18;
+        Attack = 15;
         CritChance = 0.05;
         EvadeChance = 0.01;
 
@@ -28,17 +29,21 @@ class SulfuricSlime : Monster
         if (random.NextDouble() <= 0.3)
         {
             Console.WriteLine($"{Name}이(가) {mskills[0].Name}을 시전했습니다.\n{mskills[0].Description}");
-            target.statusEffects.Add(new StatusEffect
+            if (!target.statusEffects.Any(se => se.Name == "가스 중독"))
             {
-                Name = "가스중독",
-                Duration = 3,
-                OnTurnStart = (target, bs) =>
+                target.statusEffects.Add(new StatusEffect
                 {
-                    target.Hp -= 3;
-                    Console.WriteLine($"3의 가스중독 피해를 입었습니다.");
-                    Console.WriteLine();
-                }
-            });
+                    Name = "가스 중독",
+                    Duration = 3,
+                    OnTurnStart = (target, bs) =>
+                    {
+                        target.Hp -= 3;
+                        Console.WriteLine($"3의 가스 중독 피해를 입었습니다.");
+                        Console.WriteLine();
+                    }
+                });
+            }
+            
         }
         else
         {
@@ -46,18 +51,21 @@ class SulfuricSlime : Monster
             if (random.NextDouble() <= 0.5)
             {
                 Console.WriteLine($"{Name}의 공격에 유황이 유독 많이 함유 되어있었습니다.\n{mskills[0].Description}");
-
-                target.statusEffects.Add(new StatusEffect
+                if (!target.statusEffects.Any(se => se.Name == "가스 중독"))
                 {
-                    Name = "가스중독",
-                    Duration = 3,
-                    OnTurnStart = (target, bs) =>
+                    target.statusEffects.Add(new StatusEffect
                     {
-                        target.Hp -= 3;
-                        Console.WriteLine($"3의 가스중독 피해를 입었습니다.");
-                        Console.WriteLine();
-                    }
-                });
+                        Name = "가스 중독",
+                        Duration = 3,
+                        OnTurnStart = (target, bs) =>
+                        {
+                            target.Hp -= 3;
+                            Console.WriteLine($"3의 가스 중독 피해를 입었습니다.");
+                            Console.WriteLine();
+                        }
+                    });
+                }
+                
             }
         }
 

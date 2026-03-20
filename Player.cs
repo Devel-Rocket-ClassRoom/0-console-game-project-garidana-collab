@@ -37,7 +37,7 @@ public abstract class Player : Character
         foreach (var se in statusEffects)
         {
      
-            WriteLine($"[{se.Name} - {se.Duration} 남음]");
+            WriteLine($"- [{se.Name}] {se.Duration}턴 남음 ");
         }
         WriteLine();
         //for (int i = 0; i < statusEffects.Count; i++)

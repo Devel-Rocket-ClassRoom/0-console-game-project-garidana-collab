@@ -247,8 +247,7 @@ public class BattleSystem
                     damage = effect.OnTakeDamage(damage);
                 }
             }
-            // 지속효과의 지속시간이 다되면 지속효과 제거
-            p.statusEffects.RemoveAll(e => e.Duration <= 0);
+            
         }
 
         defender.Hp -= damage;
