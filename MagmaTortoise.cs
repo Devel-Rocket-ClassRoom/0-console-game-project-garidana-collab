@@ -34,7 +34,7 @@ class MagmaTortoise : Monster
         mskills.Add(new Skill
         {
             Name = "육중한 돌진",
-            Description = "껍질에 숨은 채 무서운 속도로 돌진해옵니다..."
+            Description = "껍질에 숨은 채 무서운 속도로 돌진해옵니다...\n돌진이 끝나자 껍질이 열렸습니다!"
         });
         // 3
         mskills.Add(new Skill
@@ -84,7 +84,7 @@ class MagmaTortoise : Monster
                 this.statusEffects.RemoveAll(se => se.Name == "껍질 닫기");
                 Console.WriteLine($"{Name}이 {mskills[2].Name}를 시전했습니다. {mskills[2].Description}");
                 bs.MonsterDealDamage(this, target, 1);
-                if (random.NextDouble() < 0.9) // 기절 발동 확률
+                if (random.NextDouble() < 0.6) // 기절 발동 확률
                 {
                     if (!target.statusEffects.Any(se => se.Name == "기절"))
                     {
@@ -97,12 +97,12 @@ class MagmaTortoise : Monster
                                 target.IsIncap = true;
                             }
                         });
-                        Console.WriteLine($"{mskills[3].Name}에 의해 화상을 입었습니다. 열기 데미지를 심각하게 입습니다...");
+                        Console.WriteLine($"{mskills[3].Name}에 의해 화상을 입었습니다. 열기 데미지를 2배로 입습니다...");
                     }
                     
                 }
                 IsShellOn = false;
-                return;
+                return;  // 육중한 돌진 사용후엔 무조건 return
             }
             // 용암 분사 (40% 확률로 화상 부여)
             if (random.NextDouble() < 0.4)
@@ -110,7 +110,8 @@ class MagmaTortoise : Monster
                 Console.WriteLine($"{Name}이 {mskills[3].Name}를 시전했습니다. {mskills[3].Description}");
                 if (random.NextDouble() < 0.5)
                 {
-                    if (!target.statusEffects.Any(se => se.Name == "화상"))
+                    // 이미 화상 효과 보유시 스킵
+                    if (!target.statusEffects.Any(se => se.Name == "화상")) // 화상 효과 중첩 방지
                     {
                         target.statusEffects.Add(new StatusEffect
                         {
@@ -122,6 +123,10 @@ class MagmaTortoise : Monster
                             }
                         });
                         Console.WriteLine($"{mskills[3].Name}에 의해 화상을 입었습니다. 열기 데미지를 심각하게 입습니다...");
+                    }
+                    else // target이 화상효과 보유시 일반 데미지
+                    {
+                        bs.MonsterDealDamage(this, target, 1.5);
                     }
                    
                 }

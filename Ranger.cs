@@ -8,7 +8,7 @@ class Ranger : Player
     public Ranger(string name)
     {
         Name = name;
-        MaxHp = 800;
+        MaxHp = 8000;
         Hp = MaxHp;
         MaxMp = 1000;
         Mp = MaxMp;
@@ -32,11 +32,11 @@ class Ranger : Player
             CoolDown = 4,
             Effect = (player,monster, bs) =>
             {
-                player.EvadeChance += 0.2; // 회피 증가
+                player.EvadeChance += 0.2; // 회피 증가 // 원래 Duration 2
                 player.statusEffects.Add(new StatusEffect
                 {
                     Name = "암살자의 발재간",
-                    Duration = 2,
+                    Duration = 10,
                     OnExpire = (character, bs) =>
                     {
                         // 지속효과 만료시 회피 확률 원복

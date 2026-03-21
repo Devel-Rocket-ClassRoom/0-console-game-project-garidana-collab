@@ -67,9 +67,9 @@ public class BattleSystem
             }
             // 플레이어 지속시간이 다 되면 지속효과 삭제
             player.statusEffects.RemoveAll(se => se.Duration <= 0);
-
-
+            // 플레이어 현재 적용 되는 지속효과 출력
             player.PrintStatusEffects();
+            player.IsIncap = false;
             // 플레이어 잔여 지속효과 체크 후 적용
             foreach (StatusEffect effect in player.statusEffects)
             {
@@ -78,44 +78,48 @@ public class BattleSystem
                     effect.OnTurnStart(player, this);
                 }
             }
+            // 플레이어 전투불능 상태 일시 메세지 출력 후 턴 스킵
             if (player.IsIncap)
             {
+                Console.WriteLine($"{player.Name}은 현재 전투 불능 상태이다.. 아무것도 하지 못한다..");
+                Thread.Sleep(200);
+            }
+            else
+            {
+                // 스킬 선택
+                player.PrintSkills(); // 플레이어 스킬 목록 출력
+                WriteLine();
+                Console.Write("선택 >> ");
+                string input = Console.ReadLine(); // 스킬 선택 입력 받음
+                Console.WriteLine();
+                // 스킬 선택 입력 tryparse
+                if (!int.TryParse(input, out int idx) || idx < 0 || idx >= player.skills.Count)
+                {
+                    WriteLine($"올바른 숫자를 입력하세요");
+                    continue;
+                }
+                else if (player.skills[idx].CurrentCD > 0)
+                {
+                    WriteLine("스킬이 쿨타임 중입니다.");
+                    continue;
+                }
+                else if (player.Mp < player.skills[idx].ManaCost)
+                {
+                    WriteLine("마나가 부족합니다.");
+                    continue;
+                }
+                // 입력받은 스킬 사용
+                Skill selectedSkill = player.skills[idx];
+                // 사용할 스킬 정보 출력
+                WriteLine($"[{selectedSkill.Name}] 사용 ({selectedSkill.Description})");
+                WriteLine();
+                selectedSkill.Effect(player, monster, this);
 
+                // 마나 차감과 쿨타임 갱신
+                player.Mp -= selectedSkill.ManaCost;
+                selectedSkill.CurrentCD = selectedSkill.CoolDown;
             }
-            // 스킬 선택
-            player.PrintSkills(); // 플레이어 스킬 목록 출력
-            WriteLine();
-            Console.Write("선택 >> ");
-            string input = Console.ReadLine(); // 스킬 선택 입력 받음
-            Console.WriteLine();
-            // 스킬 선택 입력 tryparse
-            if (!int.TryParse(input, out int idx) || idx < 0 || idx >= player.skills.Count)
-            {
-                WriteLine($"올바른 숫자를 입력하세요");
-                continue;
-            }
-            else if (player.skills[idx].CurrentCD > 0)
-            {
-                WriteLine("스킬이 쿨타임 중입니다.");
-                continue;
-            }
-            else if (player.Mp < player.skills[idx].ManaCost)
-            {
-                WriteLine("마나가 부족합니다.");
-                continue;
-            }
-            // 입력받은 스킬 사용
-            Skill selectedSkill = player.skills[idx];
-            // 사용할 스킬 정보 출력
-            WriteLine($"[{selectedSkill.Name}] 사용 ({selectedSkill.Description})");
-            WriteLine();
-            selectedSkill.Effect(player, monster, this);
-         
-            // 마나 차감과 쿨타임 갱신
-            player.Mp -= selectedSkill.ManaCost;
-            selectedSkill.CurrentCD = selectedSkill.CoolDown;
             //Thread.Sleep(2000);
-
             if (!monster.IsAlive) break;
 
             // 몬스터 턴
@@ -153,7 +157,7 @@ public class BattleSystem
                 // 전투 불능 검사
                 if (monster.IsIncap)
                 {
-                    WriteLine($"{monster.Name}은(는) 전투불능 상태이다.");
+                    WriteLine($"{monster.Name}은(는) 전투불능 상태이다. 아무것도 하지 못했다..");
                     
                 }
                 // 공격 게시
@@ -261,13 +265,18 @@ public class BattleSystem
     // 피격자 데미지 받는 메서드 // 후에 스킬 내부에서 데미지 처리
     public void TakeDamage(Character defender, double damage)
     {
+        // 전투불능 상태에서 회피 무효
+        if (defender.IsIncap)
+        {
+            defender.IsEvade = false;
+        }
         // 피격자 회피
-        if (_random.NextDouble() <= defender.EvadeChance)
+        else if (_random.NextDouble() <= defender.EvadeChance)
         {
             defender.IsEvade = true;
             damage = 0;
         }
-        // defender가 플레이어일 때 StatusEffect를 보유하고 있는지
+        // defender가 플레이어일 때 OnTakeDamage StatusEffect를 보유하고 있는지
         if (defender is Player p)
         {
             foreach (var effect in p.statusEffects)
@@ -278,6 +287,18 @@ public class BattleSystem
                 }
             }
             
+        }
+        // defender가 몬스터일 때 OnTakeDamage 있는지
+        if (defender is Monster m)
+        {
+            foreach (var effect in m.statusEffects)
+            {
+                // 몬스터도 데미지 감소 효과 적용 
+                if (effect.OnTakeDamage != null)
+                {
+                    damage = effect.OnTakeDamage(damage);
+                }
+            }
         }
 
         defender.Hp -= damage;
