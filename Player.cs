@@ -9,7 +9,7 @@ public abstract class Player : Character
     // 아티팩트 슬롯
     public List<Artifacts> artifacts = new();
     public int gold = 100;
-    public Dictionary<string, int> Items = new();
+    public Dictionary<string, int>  Inv = new();
     public List<Skill> skills = new();
 
     public void PrintSkills()

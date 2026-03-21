@@ -12,7 +12,7 @@ class Ranger : Player
         Hp = MaxHp;
         MaxMp = 1000;
         Mp = MaxMp;
-        Attack = 15;
+        Attack = 18;
         CritChance = 0.20;
         EvadeChance = 0.20;
 

@@ -7,6 +7,7 @@ public class TownShop
 
     public TownShop()
     {
+        // 체력 포션 20골
         items.Add(new Items 
         { 
             Name = "체력 포션", 
@@ -17,6 +18,7 @@ public class TownShop
                 player.Hp += 20;
             }
         });
+        // 마나 포션 20골
         items.Add(new Items
         {
             Name = "마나 포션", 
@@ -27,6 +29,7 @@ public class TownShop
                 player.Mp += 20;
             }
         });
+        // 정화 포션
          items.Add(new Items
         {
             Name = "정화의 포션", 
@@ -83,9 +86,14 @@ public class TownShop
                 p.gold -= selected.Price;
                 if (p.Inv.ContainsKey(selected.Name))
                 {
-
+                    p.Inv[selected.Name]++;
                 }
-
+                else
+                {
+                    p.Inv[selected.Name] = 1;
+                   
+                }
+                 WriteLine($"[{selected.Name}]을 구매했습니다. (현재 갯수:{p.Inv[selected.Name]})");
             }
 
         }

@@ -23,6 +23,8 @@ public class Artifacts
     public Action<Character ,BattleSystem> OnMonsterDeath;
     // 공격시
     public Action<Player,BattleSystem> OnDealDamage;
+    // 아티팩트 장착시 즉시 효과 적용
+    public Action<Player> OnEquip;
 
 
 

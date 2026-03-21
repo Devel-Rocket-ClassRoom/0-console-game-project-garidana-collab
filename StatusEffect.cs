@@ -13,3 +13,4 @@ public class StatusEffect
     public Func<double, double> OnTakeDamage; // 피격시 적용되는 효과
     public Action<Character, BattleSystem> OnExpire; // 지속시간 만료시 
 }
+
