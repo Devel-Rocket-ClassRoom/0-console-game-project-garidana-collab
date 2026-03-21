@@ -6,7 +6,10 @@ using static System.Console;
 
 public abstract class Player : Character
 {
-    
+    // 아티팩트 슬롯
+    public List<Artifacts> artifacts = new();
+    public int gold = 100;
+    public Dictionary<string, int> Items = new();
     public List<Skill> skills = new();
 
     public void PrintSkills()
@@ -34,12 +37,16 @@ public abstract class Player : Character
 
     public void PrintStatusEffects()
     {
-        WriteLine("@ 버프/디버프 현황 @");
+        if (statusEffects.Count > 0)
+        {
+            WriteLine("@ 버프/디버프 현황 @");
         foreach (var se in statusEffects)
         {
      
             WriteLine($"- [{se.Name}] {se.Duration}턴 남음 ");
         }
+        }
+        
         //for (int i = 0; i < statusEffects.Count; i++)
         //{
         //    WriteLine($"[{statusEffects[i].Name} - {statusEffects[i].Duration} 남음]");

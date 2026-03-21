@@ -8,7 +8,7 @@ class Ranger : Player
     public Ranger(string name)
     {
         Name = name;
-        MaxHp = 8000;
+        MaxHp = 800;
         Hp = MaxHp;
         MaxMp = 1000;
         Mp = MaxMp;

@@ -97,7 +97,7 @@ class MagmaTortoise : Monster
                                 target.IsIncap = true;
                             }
                         });
-                        Console.WriteLine($"{mskills[3].Name}에 의해 화상을 입었습니다. 열기 데미지를 2배로 입습니다...");
+                        Console.WriteLine($"{mskills[2].Name}에 의해 기절했습니다. 전투불능 상태가 됩니다...");
                     }
                     
                 }
