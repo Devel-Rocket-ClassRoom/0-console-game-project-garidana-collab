@@ -18,7 +18,7 @@ public class BattleSystem
     // 전투 실행
     public bool RunBattle(Player player, Monster monster)
     {
-        if (player.Hp <= player.MaxHp / 2)
+        if (player.Hp <= player.MaxHp * 0.6 && player.Hp > 0)
         {
             player.Hp += 30;
         }
@@ -130,7 +130,7 @@ public class BattleSystem
                 player.Mp -= selectedSkill.ManaCost;
                 selectedSkill.CurrentCD = selectedSkill.CoolDown;
             }
-            //Thread.Sleep(2000);
+
             if (!monster.IsAlive) break;
 
             // 몬스터 턴
@@ -224,7 +224,7 @@ public class BattleSystem
             WriteLine(".");
             WriteLine("전리품을 얻었습니다. 획득하려면 아무키나 누르세요");
             ReadLine();
-            WriteLine("전이품을 챙기고 더 나아갑니다.");
+            WriteLine("전리품을 챙기고 더 나아갑니다.");
             Thread.Sleep(500);
             WriteLine("터벅");
             Thread.Sleep(500);
@@ -233,6 +233,7 @@ public class BattleSystem
             WriteLine("터벅 X 100");
             Thread.Sleep(500);
             Round = 0;
+            monster.HeatDamage = 0;
             return true;
         }
         else

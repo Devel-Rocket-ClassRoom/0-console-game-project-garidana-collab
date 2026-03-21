@@ -15,6 +15,7 @@ Thread.Sleep(1000);
 WriteLine(".");
 Thread.Sleep(1000);
 WriteLine(".");
+Console.Clear();
 WriteLine("<<화산 동굴>>에 입장하였습니다.");
 WriteLine();
 WriteLine("            ~이글~");
