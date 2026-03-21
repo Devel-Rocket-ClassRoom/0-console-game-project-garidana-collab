@@ -17,7 +17,7 @@ class Warrior : Player
 
         Mp = MaxMp;
 
-        Attack = 18;
+        Attack = 180;
 
         CritChance = 0.10;
 

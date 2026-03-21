@@ -18,6 +18,17 @@ public class BattleSystem
     // 전투 실행
     public bool RunBattle(Player player, Monster monster)
     {
+        if (player.Hp <= player.MaxHp / 2)
+        {
+            player.Hp += 30;
+        }
+        Clear();
+        WriteLine("저 멀리 무언가 보입니다.");
+        WriteLine("전투를 준비합니다... 아무키나 누르세요");
+        WriteLine($"체력: {player.Hp} 마나: {player.Mp}");
+        Write(">> ");
+        ReadLine();
+        Console.Clear();
         Console.WriteLine($"\n>>>>> {monster.Name} 출현! <<<<<\n");
         // 불의 저령이후 몬스터들의 전용 출현 메시지
         if (monster.HeatDamage > 0)
@@ -205,6 +216,22 @@ public class BattleSystem
         if (player.IsAlive)
         {
             Console.WriteLine($"{monster.Name}을(를) 성공적으로 처치했다....");
+            Thread.Sleep(300);
+            WriteLine(".");
+            Thread.Sleep(300);
+            WriteLine(".");
+            Thread.Sleep(300);
+            WriteLine(".");
+            WriteLine("전리품을 얻었습니다. 획득하려면 아무키나 누르세요");
+            ReadLine();
+            WriteLine("전이품을 챙기고 더 나아갑니다.");
+            Thread.Sleep(500);
+            WriteLine("터벅");
+            Thread.Sleep(500);
+            WriteLine("터벅");
+            Thread.Sleep(500);
+            WriteLine("터벅 X 100");
+            Thread.Sleep(500);
             Round = 0;
             return true;
         }
@@ -214,9 +241,8 @@ public class BattleSystem
             Console.WriteLine($"GAME OVER...");
             return false;
         }
-       
     }
-     
+    
 
 
 

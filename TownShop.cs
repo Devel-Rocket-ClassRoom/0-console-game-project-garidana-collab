@@ -53,9 +53,11 @@ public class TownShop
         {
             Console.Clear();
             WriteLine("== 임용수의 잡화상점 ==");
-            WriteLine("[임용수]");
-            WriteLine("안녕하세요. 혹시 비뇨기과 찾아오신건 아니시죠?\n요즘 들어 부쩍 비뇨기과로 착각하고 오시는 분들이 계시더라고요\n마음껏 골라보세요");
+            WriteLine();
             WriteLine("상점에 입장 했습니다. 구매할 아이템을 선택하세요.");
+            WriteLine();
+            WriteLine("[임용수]");
+            WriteLine("  안녕하세요. 혹시 비뇨기과 찾아오신건 아니시죠?\n  요즘 들어 부쩍 비뇨기과로 착각하고 오시는 분들이 계시더라고요...\n  마음껏 골라보세요");
             WriteLine();
             WriteLine($"보유 골드 : {p.gold}G");
             WriteLine();
@@ -64,9 +66,21 @@ public class TownShop
             //아이템 목록 출력
             for (int i = 0; i < items.Count; i++)
             {
-                WriteLine($"[{i+1}] {items[i].Name} - {items[i].Price}\n- {items[i].Description}");
+                WriteLine($"[{i+1}] {items[i].Name} - {items[i].Price} - {items[i].Description}");
+
             }
             WriteLine("[0]. 상점 나가기");
+            WriteLine();
+            if (p.Inv.Count > 0)
+            {
+                WriteLine($"구매한 아이템 :");
+                foreach (var i in p.Inv)
+                {
+                    WriteLine($"[{i.Key}] {i.Value}개");
+                }
+
+            }
+            WriteLine();
             Write(">>");
             string input = ReadLine();
             if (input == "0") break;
@@ -76,11 +90,14 @@ public class TownShop
                 if (p.gold < 0)
                 {
                     WriteLine("골드가 부족합니다. 살 수 있는 아이템이 없습니다.");
+                    //Thread.Sleep(500);
                     continue;
                 }
                 if (p.gold < selected.Price)
                 {
                     WriteLine("골드가 부족합니다.");
+                    //Thread.Sleep(500);
+
                     continue;
                 }
                 p.gold -= selected.Price;
@@ -94,6 +111,8 @@ public class TownShop
                    
                 }
                  WriteLine($"[{selected.Name}]을 구매했습니다. (현재 갯수:{p.Inv[selected.Name]})");
+                 //Thread.Sleep(1500);
+
             }
 
         }

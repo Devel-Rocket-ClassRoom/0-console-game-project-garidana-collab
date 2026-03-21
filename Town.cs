@@ -142,22 +142,26 @@ public class Town // 천호 마을
                 WriteLine($"[{i + 1}] {artifacts[i].Name} - {artifacts[i].Description}");
             }
             WriteLine();
-            WriteLine(">> ");
+            Write(">> ");
+
             string artiSelect = Console.ReadLine();
             if(int.TryParse(artiSelect, out int artiChoice) && artiChoice >= 1 && artiChoice <= artifacts.Count)
             {
                 Artifacts selected = artifacts[artiChoice - 1];
                 selected.OnEquip(p);
+                
                 p.artifacts.Add(selected);
                 selectedArtifact = selected;
+                WriteLine($"{selectedArtifact.Name}을(를) 선택하였습니다.\n{selectedArtifact.Description}");
             }
             else
             {
-                WriteLine("올바른 입력을 하세요 좀");
+                WriteLine("올바른 입력을 하세요");
                 continue;
             }
 
         }
+        
         return p;
     }
 }
