@@ -8,9 +8,9 @@ class Ranger : Player
     public Ranger(string name)
     {
         Name = name;
-        MaxHp = 800;
+        MaxHp = 80;
         Hp = MaxHp;
-        MaxMp = 1000;
+        MaxMp = 100;
         Mp = MaxMp;
         Attack = 18;
         CritChance = 0.20;
@@ -36,7 +36,7 @@ class Ranger : Player
                 player.statusEffects.Add(new StatusEffect
                 {
                     Name = "암살자의 발재간",
-                    Duration = 10,
+                    Duration = 2,
                     OnExpire = (character, bs) =>
                     {
                         // 지속효과 만료시 회피 확률 원복
