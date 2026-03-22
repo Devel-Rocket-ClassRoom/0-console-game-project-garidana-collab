@@ -9,7 +9,7 @@ class Warrior : Player
     {
         Name = name;
 
-        MaxHp = 1200;
+        MaxHp = 120;
 
         Hp = MaxHp;
 

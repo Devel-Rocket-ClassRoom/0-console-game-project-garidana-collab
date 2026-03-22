@@ -34,7 +34,7 @@ public class Items
                 Effect = (player,bs) =>
                 {
                     player.Mp += 20;
-                    if (player.Mp > player.MaxHp)
+                    if (player.Mp > player.MaxMp)
                     {
                         player.Mp = player.MaxMp;
                     }

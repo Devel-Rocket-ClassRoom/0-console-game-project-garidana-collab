@@ -560,7 +560,7 @@ public class BattleSystem
     {
         Artifacts acquiredArtifact = null;
         double roll = _random.NextDouble();
-        if (roll <= 1)
+        if (roll <= 0.005) // 0.005
         {
             string artifactDropped = DropPool[m.Name][ArtifactTier.권능];
             acquiredArtifact = Artifacts.All[artifactDropped];
