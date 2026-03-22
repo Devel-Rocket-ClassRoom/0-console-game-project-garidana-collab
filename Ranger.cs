@@ -62,7 +62,7 @@ class Ranger : Player
                     {
                         // 공격력 만큼의 출혈 피해
                         character.Hp -= player.Attack;
-                        Console.WriteLine($"{character.Name}은 {player.Attack}의 출혈 피해를 입고있다");
+                        Console.WriteLine($"{character.Name}은(는) {player.Attack}의 출혈 피해를 입고있다");
                         Console.WriteLine();
                     }
                 });
@@ -89,15 +89,15 @@ class Ranger : Player
                     },
                     OnExpire = (character, bs) =>
                     {
-                        double originalCritChance = character.CritChance;
-                        character.CritChance = 1.0;
+
+                        character.CritChance += 1.0;
                         character.statusEffects.Add(new StatusEffect
                         {
                             Name = "은신:약점 공격",
                             Duration = 1,
                             OnExpire = (character1, bs) =>
                             {
-                                character1.CritChance = originalCritChance;
+                                character1.CritChance -= 1.0;
                             }
                         });
                     }

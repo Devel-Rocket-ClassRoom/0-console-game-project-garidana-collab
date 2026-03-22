@@ -15,11 +15,71 @@ public class BattleSystem
     public int Round = 0;
     public bool IsCrit;
     public bool IsEvade;
+
+
+    //몬스터 아티팩트 드랍 딕셔너리의 딕셔너리
+    Dictionary<string, Dictionary<ArtifactTier, string>> DropPool = new()
+    {
+        {
+            "화산 두더지", new Dictionary<ArtifactTier, string>
+            {
+                {ArtifactTier.일반, "두더지 발톱" },
+                {ArtifactTier.영웅, "두더지의 어깨뼈" },
+                {ArtifactTier.전설, "대자연의 어머니의 유품" },
+                {ArtifactTier.권능, "나상욱의 가호" }
+            }
+        },
+        {
+            "유황 슬라임", new Dictionary<ArtifactTier, string>
+            {
+                {ArtifactTier.일반, "유황 점액 덩어리" },
+                {ArtifactTier.영웅, "불사조의 깃털" },
+                {ArtifactTier.전설, "대자연의 아버지의 유품" },
+                {ArtifactTier.권능, "나상욱의 가호" }
+            }
+        },
+        {
+            "불의 정령", new Dictionary<ArtifactTier, string>
+            {
+                {ArtifactTier.일반, "과열된 마나 정수" },
+                {ArtifactTier.영웅, "이글거리는 갑옷" },
+                {ArtifactTier.전설, "고대 엘프 망토" },
+                {ArtifactTier.권능, "나상욱의 가호" }
+            }
+        },
+        {
+            "용암 거북", new Dictionary<ArtifactTier, string>
+            {
+                {ArtifactTier.일반, "거북이 골수" },
+                {ArtifactTier.영웅, "용암 등딱지" },
+                {ArtifactTier.전설, "대지의 심장" },
+                {ArtifactTier.권능, "나상욱의 가호" }
+            }
+        },
+    };
+
+
     // 전투 실행
     public bool RunBattle(Player player, Monster monster)
     {
+        
+        // 전투 시작시 모든 지속효과 삭제
+        foreach (var se in player.statusEffects)
+        {
+            if (se.OnExpire != null)
+            {
+                se.OnExpire(player,this);
+            }
+        }
+        // 전투 시작시 쿨타임 리셋
+        foreach (var skill in player.skills)
+        {
+            skill.CurrentCD = 0;
+        }
+        player.statusEffects.Clear();
+
         // 새로운 전투시 체력 및 마나 회복
-        if (player.Hp <= player.MaxHp * 0.6 && player.Hp > 0)
+        if (player.Hp <= player.MaxHp * 0.5 && player.Hp > 0)
         {
             player.Hp += 30;
             if (player.Hp > player.MaxHp)
@@ -27,7 +87,7 @@ public class BattleSystem
                 player.Hp = player.MaxHp;
             }
         }
-        if (player.Mp <= player.MaxMp * 0.4 && player.Mp > 0)
+        if (player.Mp <= player.MaxMp * 0.5 && player.Mp > 0)
         {
             player.Mp += 30;
             if (player.Mp > player.MaxMp)
@@ -37,11 +97,36 @@ public class BattleSystem
         }
 
         Clear();
-        WriteLine("저 멀리 무언가 보입니다.");
-        WriteLine("전투를 준비합니다... 아무키나 누르세요");
-        WriteLine($"체력: {player.Hp} 마나: {player.Mp}");
+        if (monster.IsFinalBoss)
+        {
+            WriteLine("태초의 아티팩트가 위험을 감지한듯 공명하기 시작합니다...");
+            WriteLine("최후의 전투를 준비합니다....");
+            WriteLine("마음을 굳게 먹고 \"모든 준비는 끝났다\"를 입력하세요...");
+            WriteLine();
+        }
+        else
+        {
+            WriteLine("저 멀리 무언가 보입니다.");
+            WriteLine("전투를 준비합니다... 아무키나 누르세요");
+            WriteLine();
+        }
+        WriteLine("== 현재 능력치 ==");
+        WriteLine($"체력: {player.Hp}/{player.MaxHp}  마나: {player.Mp}/{player.MaxMp}");
+        WriteLine($"공격력 : {player.Attack}  치명타 : {player.CritChance * 100:F0}%  회피율 : {player.EvadeChance * 100:F0}%");
+        WriteLine();
+        // 보유 아티팩트 목록
+        if (player.artifacts.Count > 0)
+        {
+            WriteLine($"== 보유 아티팩트 ==");
+
+            foreach (var artifact in player.artifacts)
+            {
+                WriteLine($"- [{artifact.Tier}] {artifact.Name}\n   {artifact.Description}");
+            }
+        }
         Write(">> ");
         ReadLine();
+       
         Console.Clear();
         Console.WriteLine($"\n>>>>> {monster.Name} 출현! <<<<<\n");
         // 불의 저령이후 몬스터들의 전용 출현 메시지
@@ -49,6 +134,12 @@ public class BattleSystem
         {
             WriteLine("-------------------------------------");
             WriteLine("엄청난 열기가 느껴집니다. 중심부에 가까워지는 느낌입니다.");
+            WriteLine($"라운드 마다 {monster.HeatDamage}의 열기 피해를 입습니다.");
+        }
+        else if (monster.IsFinalBoss)
+        {
+            WriteLine("-------------------------------------");
+            WriteLine("견디지 못할것 같은 열기입니다. 거대한 괴물이 용암속에서 등장합니다.");
             WriteLine($"라운드 마다 {monster.HeatDamage}의 열기 피해를 입습니다.");
         }
 
@@ -70,7 +161,7 @@ public class BattleSystem
             // 현재 상태 출력
             Console.WriteLine($"[{player.Name}] HP: {player.Hp}/{player.MaxHp} MP: {player.Mp}/{player.MaxMp}");
 
-            Console.WriteLine($"[{monster.Name}] HP: {monster.Hp}/{monster.MaxHp}");
+            Console.WriteLine($"[{monster.Name}] HP: {monster.Hp:F0}/{monster.MaxHp:F0}");
             WriteLine();
 
             // 플레이어 지속효과 지속시간 감소 
@@ -116,8 +207,9 @@ public class BattleSystem
             // 플레이어 전투불능 상태 일시 메세지 출력 후 턴 스킵
             if (player.IsIncap)
             {
-                Console.WriteLine($"{player.Name}은 현재 전투 불능 상태이다.. 아무것도 하지 못한다..");
-                Thread.Sleep(200);
+                WriteLine($"{player.Name}은 현재 전투 불능 상태이다.. 아무것도 하지 못한다..");
+                WriteLine();
+                Thread.Sleep(500);
             }
             else
             {
@@ -154,7 +246,7 @@ public class BattleSystem
                             inum++;
                         }
                         Write(">> ");
-                        WriteLine();
+                       
                     }
                     string choice = ReadLine();
                     if (!int.TryParse(choice, out int itemChoice) || itemChoice < 0 || itemChoice > player.Inv.Count)
@@ -315,14 +407,18 @@ public class BattleSystem
             WriteLine(".");
             Thread.Sleep(300);
             WriteLine(".");
-            WriteLine("전리품을 얻었습니다. 획득하려면 아무키나 누르세요");
-            ReadLine();
+            //WriteLine("전리품을 얻었습니다. 획득하려면 아무키나 누르세요");
+            //ReadLine();
+            DropArtifact(player,monster);
             WriteLine("전리품을 챙기고 더 나아갑니다.");
+            WriteLine();
             Thread.Sleep(500);
             WriteLine("터벅");
             Thread.Sleep(500);
             WriteLine("터벅");
             Thread.Sleep(500);
+            WriteLine("터벅");
+            Thread.Sleep(800);
             WriteLine("터벅 X 100");
             Thread.Sleep(500);
             Round = 0;
@@ -331,8 +427,16 @@ public class BattleSystem
         }
         else
         {
-            Console.WriteLine($"{monster.Name} 에게 플레이어가 살해당했다...");
+            if (monster.IsFinalBoss)
+            {
+                Console.WriteLine("절대적인 존재에겐 당해 낼 수 없었다...");
+            }
+            else
+            {
+                Console.WriteLine($"{monster.Name} 에게 플레이어가 살해당했다...");
+            }
             Console.WriteLine($"GAME OVER...");
+            ReadLine();
             return false;
         }
     }
@@ -444,11 +548,57 @@ public class BattleSystem
         }
 
         defender.Hp -= damage;
-        WriteLine(defender.IsEvade ? $"[{defender.Name}]이(가) 공격을 회피했다! 아무런 피해가 없었다.." : $"[{defender.Name}]이(가) {damage} 피해를 입었다.");
+        WriteLine(defender.IsEvade ? $"[{defender.Name}]이(가) 공격을 회피했다! 아무런 피해가 없었다.." : $"[{defender.Name}]이(가) {damage:F0} 피해를 입었다.");
         defender.IsEvade = false;
         WriteLine();
 
 
 
     }
+
+    public void DropArtifact(Player p, Monster m)
+    {
+        Artifacts acquiredArtifact = null;
+        double roll = _random.NextDouble();
+        if (roll <= 1)
+        {
+            string artifactDropped = DropPool[m.Name][ArtifactTier.권능];
+            acquiredArtifact = Artifacts.All[artifactDropped];
+        }
+        else if ( roll <= 0.05) 
+        {
+            // 티어로 아티팩트 이름 호출 및 변수 할당
+            string artifactDropped = DropPool[m.Name][ArtifactTier.전설];
+            acquiredArtifact = Artifacts.All[artifactDropped];
+            //p.artifacts.Add(acquiredArtifact);
+        }
+        else if (roll <= 0.25)
+        {
+            string artifactDropped = DropPool[m.Name][ArtifactTier.영웅];
+            acquiredArtifact = Artifacts.All[artifactDropped];
+            //p.artifacts.Add(acquiredArtifact);
+        }
+        else //(roll <= 0.70)
+        {
+            string artifactDropped = DropPool[m.Name][ArtifactTier.일반];
+            acquiredArtifact = Artifacts.All[artifactDropped];
+            //p.artifacts.Add(acquiredArtifact);
+        }
+        p.artifacts.Add(acquiredArtifact);
+        WriteLine($"[{acquiredArtifact.Tier.ToString()}] 등급 전리품이 나왔습니다. 확인 하려면 아무키나 누르세요");
+        Console.ReadLine();
+        WriteLine($"[{acquiredArtifact.Tier.ToString()}] {acquiredArtifact.Name}을(를) 획득했습니다.\n{acquiredArtifact.Description}");
+        if (acquiredArtifact.OnEquip != null)
+        {
+            acquiredArtifact.OnEquip(p);
+        }
+        WriteLine();
+        WriteLine("획득 하려면 아무키나 누르세요");
+        WriteLine();
+        Write(">> ");
+        ReadLine();
+
+
+    }
+
 }

@@ -15,7 +15,7 @@ public class Town // 천호 마을
         {
             Name = "거인의 정수",
             Description = "최대 체력이 20 증가합니다.",
-            Tier = ArtifactTier.Common,
+            Tier = ArtifactTier.태초,
             OnEquip = (player) =>
             {
                 player.MaxHp += 20;
@@ -26,7 +26,7 @@ public class Town // 천호 마을
         {
             Name = "응징의 낙인",
             Description = "공격력이 5 증가합니다.",
-            Tier = ArtifactTier.Common,
+            Tier = ArtifactTier.태초,
             OnEquip = (player) =>
             {
                 player.Attack += 5;
@@ -36,7 +36,7 @@ public class Town // 천호 마을
         {
             Name = "기회의 열쇠",
             Description = "치명타 확률과 회피 확률이 5% 증가합니다.",
-            Tier = ArtifactTier.Common,
+            Tier = ArtifactTier.태초,
             OnEquip = (player) =>
             {
                 player.CritChance += 0.05;
@@ -52,7 +52,7 @@ public class Town // 천호 마을
         while (p == null)
         {
             Clear();
-            WriteLine("====== 김경일의 모험 ver 0.0.5 ======");
+            WriteLine("====== 김경일의 모험 ver 0.0.6 ======");
             WriteLine();
             WriteLine("          평화로운 천호 마을            ");
             WriteLine();

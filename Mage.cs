@@ -14,8 +14,8 @@ class Mage : Player
         Hp = MaxHp;
         MaxMp = 120;
         Mp = MaxMp;
-        Attack = 18;
-        CritChance = 0.05;
+        Attack = 20;
+        CritChance = 0.1;
         EvadeChance = 0.1;
 
         skills.Add(new Skill

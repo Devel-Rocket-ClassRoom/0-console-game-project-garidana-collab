@@ -12,7 +12,7 @@ class FireSpirit : Monster
     public FireSpirit ()
     {
         Name = "불의 정령";
-        MaxHp = 150;
+        MaxHp = 200;
         Hp = MaxHp;
         Attack = 20;
         CritChance = 0.05;
@@ -56,7 +56,7 @@ class FireSpirit : Monster
         if (bs.Round % 3 == 0)
         {
             Console.WriteLine();
-            Console.WriteLine($"{Name}이 \"{mskills[1].Name}\"을 시전했습니다.\n{mskills[1].Description}");
+            Console.WriteLine($"{Name}이 \"{mskills[1].Name}\"를 시전했습니다.\n{mskills[1].Description}");
             bs.MonsterDealDamage(this, target, 3);
             return;
         }   
@@ -69,6 +69,6 @@ class FireSpirit : Monster
         }
         bs.MonsterDealDamage(this, target, 1);
         Console.WriteLine($"{Name}의 \"{mskills[0].Name}\"으로 인해 열기피해가 증가했습니다 ({heatStack} 중첩).");
-        
+        Console.WriteLine();
     }
 }

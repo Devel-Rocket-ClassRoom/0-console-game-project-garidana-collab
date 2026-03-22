@@ -9,7 +9,7 @@ class Warrior : Player
     {
         Name = name;
 
-        MaxHp = 120;
+        MaxHp = 1200;
 
         Hp = MaxHp;
 
@@ -17,7 +17,7 @@ class Warrior : Player
 
         Mp = MaxMp;
 
-        Attack = 180;
+        Attack = 18;
 
         CritChance = 0.10;
 

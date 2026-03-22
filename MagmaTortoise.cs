@@ -12,7 +12,7 @@ class MagmaTortoise : Monster
     public MagmaTortoise()
     {
         Name = "용암 거북";
-        MaxHp = 1500;
+        MaxHp = 250;
         Hp = MaxHp;
         Attack = 20;
         CritChance = 0.05;
@@ -59,7 +59,7 @@ class MagmaTortoise : Monster
             if (bs.Round % 3 == 0 && bs.Round > 0)
             {
                 IsShellOn = true;
-                Console.WriteLine($"{Name}이 {mskills[1].Name}를 시전했습니다. {mskills[1].Description}");
+                Console.WriteLine($"{Name}이 \"{mskills[1].Name}\"를 시전했습니다. {mskills[1].Description}");
                 this.statusEffects.Add(new StatusEffect
                 {
                     Name = "껍질 닫기",
@@ -82,7 +82,7 @@ class MagmaTortoise : Monster
             if (bs.Round % 3 == 0)
             {
                 this.statusEffects.RemoveAll(se => se.Name == "껍질 닫기");
-                Console.WriteLine($"{Name}이 {mskills[2].Name}를 시전했습니다. {mskills[2].Description}");
+                Console.WriteLine($"{Name}이 \"{mskills[2].Name}\"을 시전했습니다. {mskills[2].Description}");
                 bs.MonsterDealDamage(this, target, 1);
                 if (random.NextDouble() < 0.6) // 기절 발동 확률
                 {
@@ -107,7 +107,7 @@ class MagmaTortoise : Monster
             // 용암 분사 (40% 확률로 화상 부여)
             if (random.NextDouble() < 0.4)
             {
-                Console.WriteLine($"{Name}이 {mskills[3].Name}를 시전했습니다. {mskills[3].Description}");
+                Console.WriteLine($"{Name}이 \"{mskills[3].Name}\"를 시전했습니다. {mskills[3].Description}");
                 if (random.NextDouble() < 0.5)
                 {
                     // 이미 화상 효과 보유시 스킵
@@ -141,7 +141,7 @@ class MagmaTortoise : Monster
             // 지각 진동
             else
             {
-                Console.WriteLine($"{Name}이 {mskills[4].Name}를 시전했습니다. {mskills[4].Description}");
+                Console.WriteLine($"{Name}이 {mskills[4].Name}을 시전했습니다. {mskills[4].Description}");
                 if (!target.statusEffects.Any(se => se.Name == "어지러움"))
                 {
                     target.statusEffects.Add(new StatusEffect
@@ -158,5 +158,6 @@ class MagmaTortoise : Monster
                 }
             }
         }
+        Console.WriteLine();
     }
 }

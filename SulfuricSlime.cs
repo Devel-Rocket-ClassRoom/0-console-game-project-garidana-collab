@@ -26,7 +26,7 @@ class SulfuricSlime : Monster
     }
     public override void ExecuteSkill(Character target, BattleSystem bs)
     {
-        
+        // 유황 분출
         if (random.NextDouble() <= 0.3)
         {
             Console.WriteLine($"{Name}이(가) \"{mskills[0].Name}\"을 시전했습니다.\n{mskills[0].Description}");
@@ -40,7 +40,7 @@ class SulfuricSlime : Monster
                     {
                         target.Hp -= 3;
                         Console.WriteLine($"3의 가스 중독 피해를 입었습니다.");
-                        Console.WriteLine();
+                        
                     }
                 });
             }
@@ -62,14 +62,13 @@ class SulfuricSlime : Monster
                         {
                             target.Hp -= 3;
                             Console.WriteLine($"3의 가스 중독 피해를 입었습니다.");
-                            Console.WriteLine();
                         }
                     });
                 }
                 
             }
         }
-
+        Console.WriteLine();
     }
 }
 

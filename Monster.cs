@@ -12,5 +12,6 @@ public abstract class Monster : Character
 
     protected ConsoleColor MColor;
 
+    public bool IsFinalBoss = false;
     public abstract void ExecuteSkill(Character target, BattleSystem bs);
 }

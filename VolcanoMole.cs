@@ -11,7 +11,7 @@ class VolcanoMole : Monster
     public VolcanoMole()
     {
         Name = "화산 두더지";
-        MaxHp = 150;
+        MaxHp = 120;
         Hp = MaxHp;
         Attack = 15;
         CritChance = 0.0;
@@ -47,6 +47,7 @@ class VolcanoMole : Monster
             bs.MonsterDealDamage(this, target, 4);
             IsBurrow = false;
         }
+        Console.WriteLine();
     }
 
 }
