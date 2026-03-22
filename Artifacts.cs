@@ -28,10 +28,11 @@ public class Artifacts
         {"두더지 발톱", new Artifacts
                 {
                     Name = "두더지 발톱",
-                    Description = "치명타 확률이 5% 증가합니다.",
+                    Description = "치명타 확률이 5% 증가하고 최대체력이 20 증가합니다.",
                     Tier = ArtifactTier.일반,
                     OnEquip = (player) =>
                     {
+                        player.MaxHp += 20;
                         player.CritChance += 0.05;
                     }
                 }
