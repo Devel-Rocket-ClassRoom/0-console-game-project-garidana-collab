@@ -84,7 +84,7 @@ class MagmaTortoise : Monster
                 this.statusEffects.RemoveAll(se => se.Name == "껍질 닫기");
                 Console.WriteLine($"{Name}이 \"{mskills[2].Name}\"을 시전했습니다. {mskills[2].Description}");
                 bs.MonsterDealDamage(this, target, 1);
-                if (random.NextDouble() < 0.6) // 기절 발동 확률
+                if (random.NextDouble() < 0.3) // 기절 발동 확률
                 {
                     if (!target.statusEffects.Any(se => se.Name == "기절"))
                     {
