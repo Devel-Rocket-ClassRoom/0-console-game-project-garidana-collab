@@ -30,7 +30,7 @@ public class TownShop
             //아이템 목록 출력
             for (int i = 0; i < items.Count; i++)
             {
-                WriteLine($"[{i+1}] {items[i].Name} - {items[i].Price} - {items[i].Description}");
+                WriteLine($"[{i+1}] {items[i].Name} - {items[i].Price}G - {items[i].Description}");
 
             }
             WriteLine("[0]. 상점 나가기");
