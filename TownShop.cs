@@ -45,7 +45,7 @@ public class TownShop
 
             }
             WriteLine();
-            Write(">>");
+            Write(">> ");
             string input = ReadLine();
             if (input == "0") break;
             if (int.TryParse(input, out int choice) && choice >= 1 && choice <= items.Count)

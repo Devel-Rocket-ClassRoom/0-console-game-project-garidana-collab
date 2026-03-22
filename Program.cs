@@ -5,6 +5,7 @@ using System.Threading;
 
 
 //WriteLine("====== 김경일의 모험 ver 0.0.5 ======");
+
 Town ChunHo = new();
 BattleSystem BS = new();
 Player p = ChunHo.Enter();
@@ -29,7 +30,7 @@ WriteLine();
 WriteLine("더 깊숙히 들어갑니다... (아무키나 입력)");
 Console.ReadLine();
 
-// Warrior w = new("김경일");
+Warrior w = new("김경일");
 // Mage m = new Mage("김경일");
 // Ranger r = new("김경일");
 VolcanoMole vm = new();

@@ -18,10 +18,24 @@ public class BattleSystem
     // 전투 실행
     public bool RunBattle(Player player, Monster monster)
     {
+        // 새로운 전투시 체력 및 마나 회복
         if (player.Hp <= player.MaxHp * 0.6 && player.Hp > 0)
         {
             player.Hp += 30;
+            if (player.Hp > player.MaxHp)
+            {
+                player.Hp = player.MaxHp;
+            }
         }
+        if (player.Mp <= player.MaxMp * 0.4 && player.Mp > 0)
+        {
+            player.Mp += 30;
+            if (player.Mp > player.MaxMp)
+            {
+                player.Mp = player.MaxMp;
+            }
+        }
+
         Clear();
         WriteLine("저 멀리 무언가 보입니다.");
         WriteLine("전투를 준비합니다... 아무키나 누르세요");
@@ -53,6 +67,7 @@ public class BattleSystem
             }
             // 플레이어 턴
 
+            // 현재 상태 출력
             Console.WriteLine($"[{player.Name}] HP: {player.Hp}/{player.MaxHp} MP: {player.Mp}/{player.MaxMp}");
 
             Console.WriteLine($"[{monster.Name}] HP: {monster.Hp}/{monster.MaxHp}");
@@ -65,10 +80,10 @@ public class BattleSystem
                 {
                     se.Duration--;
                 }
-
             }
             var pExpired = player.statusEffects.Where(se => se.Duration <= 0).ToList();
-            // 플레이어 만료된 지속효과 (효과를 받은 스택의 원상복귀) OnExpire 델리게이트 호출
+
+            // OnExpire 플레이어 만료된 지속효과 
             foreach (var se in pExpired)
             {
                 if (se.Duration <= 0 && se.OnExpire != null)
@@ -78,6 +93,7 @@ public class BattleSystem
             }
             // 플레이어 지속시간이 다 되면 지속효과 삭제
             player.statusEffects.RemoveAll(se => se.Duration <= 0);
+
             // 플레이어 현재 적용 되는 지속효과 출력
             player.PrintStatusEffects();
             player.IsIncap = false;
@@ -87,6 +103,14 @@ public class BattleSystem
                 if (effect.OnTurnStart != null)
                 {
                     effect.OnTurnStart(player, this);
+                }
+            }
+            // OnTurnStart 아티팩트 효과 발동
+            foreach (var artifact in player.artifacts)
+            {
+                if (artifact.OnTurnStart != null)
+                {
+                    artifact.OnTurnStart(player, this);
                 }
             }
             // 플레이어 전투불능 상태 일시 메세지 출력 후 턴 스킵
@@ -104,34 +128,103 @@ public class BattleSystem
                 string input = Console.ReadLine(); // 스킬 선택 입력 받음
                 Console.WriteLine();
                 // 스킬 선택 입력 tryparse
-                if (!int.TryParse(input, out int idx) || idx < 0 || idx >= player.skills.Count)
+                if (!int.TryParse(input, out int idx) || idx < 0 || idx > player.skills.Count)
                 {
                     WriteLine($"올바른 숫자를 입력하세요");
                     continue;
                 }
-                else if (player.skills[idx].CurrentCD > 0)
+                // 인벤토리 선택 
+                else if (idx == 0)
+                {
+                    // 인벤토리 비어있음
+                    if (player.Inv.Count == 0)
+                    {
+                        WriteLine("인벤토리가 비어있습니다.");
+                        continue;
+                    }
+
+                    else
+                    {
+                        int inum = 1;
+                        WriteLine("-- 인벤토리 --");
+                        WriteLine();
+                        foreach (var i in player.Inv)
+                        {
+                            WriteLine($"{inum}. {i.Key} ({i.Value}개)");
+                            inum++;
+                        }
+                        Write(">> ");
+                        WriteLine();
+                    }
+                    string choice = ReadLine();
+                    if (!int.TryParse(choice, out int itemChoice) || itemChoice < 0 || itemChoice > player.Inv.Count)
+                    {
+                        WriteLine("올바른 숫자를 입력해주세요");
+                        WriteLine("아이템 외의 입력을 하면 스킬 선택으로 돌아갑니다.");
+                        continue;
+                    }
+                    string selectedItemName = "";
+                    int Inum = 1;
+                    foreach (var i in player.Inv)
+                    {
+                        if (Inum == itemChoice)
+                        {
+                            selectedItemName = i.Key;
+                            break;
+                        }
+                        Inum++;
+                    }
+                    WriteLine($"[{selectedItemName}]을 사용했습니다.");
+                    WriteLine();
+
+                    // 사용한 아이템 갯수 감소, 제거 및 효과 적용
+                    Items.All[selectedItemName].Effect(player, this); // 효과 적용
+                    player.Inv[selectedItemName]--; // 사용후 갯수 감소
+                    if (player.Inv[selectedItemName] <= 0)
+                    {
+                        player.Inv.Remove(selectedItemName); // 갯수 =0 일때 컬렉션에서 제거
+                    }
+                    //continue;
+
+                }
+                else if (player.skills[idx - 1].CurrentCD > 0)
                 {
                     WriteLine("스킬이 쿨타임 중입니다.");
                     continue;
                 }
-                else if (player.Mp < player.skills[idx].ManaCost)
+                else if (player.Mp < player.skills[idx - 1].ManaCost)
                 {
                     WriteLine("마나가 부족합니다.");
                     continue;
                 }
-                // 입력받은 스킬 사용
-                Skill selectedSkill = player.skills[idx];
-                // 사용할 스킬 정보 출력
-                WriteLine($"[{selectedSkill.Name}] 사용 ({selectedSkill.Description})");
-                WriteLine();
-                selectedSkill.Effect(player, monster, this);
+                // 사용가능 한 스킬 사용
+                else
+                {
+                    // 입력받은 스킬 사용
+                    Skill selectedSkill = player.skills[idx - 1];
+                    // 사용할 스킬 정보 출력
+                    WriteLine($"[{selectedSkill.Name}] 사용 ({selectedSkill.Description})");
+                    WriteLine();
+                    selectedSkill.Effect(player, monster, this);
 
-                // 마나 차감과 쿨타임 갱신
-                player.Mp -= selectedSkill.ManaCost;
-                selectedSkill.CurrentCD = selectedSkill.CoolDown;
+                    // 마나 차감과 쿨타임 갱신
+                    player.Mp -= selectedSkill.ManaCost;
+                    selectedSkill.CurrentCD = selectedSkill.CoolDown;
+                }
             }
-
-            if (!monster.IsAlive) break;
+            
+            if (!monster.IsAlive)
+            {
+                // 몬스터 사망 발동 아티팩트 OnMonsterDeath
+                foreach (var artifact in player.artifacts)
+                {
+                    if (artifact.OnMonsterDeath != null)
+                    {
+                        artifact.OnMonsterDeath(player, this);
+                    }
+                }
+                break;
+            }
 
             // 몬스터 턴
             // 몬스터 지속효과 지속시간 감소 및 효과 삭제
@@ -179,7 +272,7 @@ public class BattleSystem
             }
 
             // 맵의 열기 데미지
-            if (monster.HeatDamage > 0)
+            if (monster.HeatDamage > 0 && !player.IsHeatImmune)
             {
                 int IncreasedHeat = monster.HeatDamage * 2;
                 if (player.statusEffects.Any(se => se.Name == "화상"))
@@ -254,6 +347,8 @@ public class BattleSystem
 
 
 
+
+
     // 플레이어가 데미지 주는 메서드
     public void PlayerDealDamage(Character attacker, Character defender, double multiplier, double bonusDmg = 0)  // 스킬내부에서 DealDamage계산
     {
@@ -268,7 +363,18 @@ public class BattleSystem
         WriteLine(attacker.IsCrit ? $"[{attacker.Name}]의 치명타 공격!" : $"[{attacker.Name}]의 공격!");
 
         // 위의 내용으로 TakeDamage 호출
-        TakeDamage(defender, damage);
+        TakeDamage(attacker, defender, damage);
+        // 불사조의 깃털 아티팩트 치명타시 회복 
+        if (attacker is Player p)
+        {
+            foreach (var artifact in p.artifacts)
+            {
+                if (artifact.OnDealDamage != null)
+                {
+                    artifact.OnDealDamage(p, this);
+                }
+            }
+        }
         attacker.IsCrit = false;
     }
 
@@ -285,12 +391,12 @@ public class BattleSystem
         WriteLine(attacker.IsCrit ? $"[{attacker.Name}]의 치명타 공격!" : $"[{attacker.Name}]의 공격!");
 
         // 위의 내용으로 TakeDamage 호출
-        TakeDamage(defender, damage);
+        TakeDamage(attacker, defender, damage);
         attacker.IsCrit = false;
     }
 
     // 피격자 데미지 받는 메서드 // 후에 스킬 내부에서 데미지 처리
-    public void TakeDamage(Character defender, double damage)
+    public void TakeDamage(Character attacker, Character defender, double damage)
     {
         // 전투불능 상태에서 회피 무효
         if (defender.IsIncap)
@@ -313,8 +419,17 @@ public class BattleSystem
                     damage = effect.OnTakeDamage(damage);
                 }
             }
-            
+            // 용암 등딱지 공격 반사 발동
+            foreach (var artifact in p.artifacts)
+            {
+                if (artifact.OnReflect != null && attacker is Monster mon)
+                {
+                    artifact.OnReflect(p, mon, this);
+                }
+            }
         }
+        // defender가 플레이어일 때 artifacts.OnTakeDamage가 있는지
+        
         // defender가 몬스터일 때 OnTakeDamage 있는지
         if (defender is Monster m)
         {

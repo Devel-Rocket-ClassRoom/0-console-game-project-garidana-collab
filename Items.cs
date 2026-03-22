@@ -18,6 +18,11 @@ public class Items
                 Effect = (player,bs) =>
                 {
                     player.Hp += 20;
+                    if (player.Hp > player.MaxHp)
+                    {
+                        player.Hp = player.MaxHp;
+                    }
+                    
                 }
             }
         },
@@ -29,12 +34,16 @@ public class Items
                 Effect = (player,bs) =>
                 {
                     player.Mp += 20;
+                    if (player.Mp > player.MaxHp)
+                    {
+                        player.Mp = player.MaxMp;
+                    }
                 }
         }
         },
         {"정화 포션", new Items
             {
-                Name = "정화의 포션",
+                Name = "정화 포션",
                 Description = "상태이상 1개를 정화 합니다.",
                 Price = 20,
                 Effect = (player, bs) =>
@@ -43,6 +52,10 @@ public class Items
                     {
                         player.statusEffects.RemoveAt(player.statusEffects.Count - 1);
 
+                    }
+                    else
+                    {
+                        Console.WriteLine("해제할 상태이상이 없습니다..건강해진 느낌은 듭니다..");
                     }
                 }
             }
